@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(TailGenerator))]
 [RequireComponent(typeof(SnakeInput))]
@@ -14,13 +15,19 @@ public class Snake : MonoBehaviour
     private TailGenerator _tailGenerator;
     private List<Segment> _tail;
 
+    public event UnityAction<int> SizeUpdated; 
+
     private void Awake()
     {
         _snakeInput = GetComponent<SnakeInput>();
         _tailGenerator = GetComponent<TailGenerator>();
         
         _tail = _tailGenerator.Generate();
+        SizeUpdated?.Invoke(_tail.Count);
     }
+
+    private void OnEnable() => _snakeHead.BlockCollided += OnBlockCollided;
+    private void OnDisable() => _snakeHead.BlockCollided -= OnBlockCollided;
 
     private void FixedUpdate()
     {
@@ -42,5 +49,14 @@ public class Snake : MonoBehaviour
         }
         
         _snakeHead.Move(nextPosition);
+    }
+
+    private void OnBlockCollided()
+    {
+        var deletedSegment = _tail[_tail.Count - 1];
+        _tail.Remove(deletedSegment);
+        Destroy(deletedSegment.gameObject);
+        
+        SizeUpdated?.Invoke(_tail.Count);
     }
 }

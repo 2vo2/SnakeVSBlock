@@ -1,10 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class SnakeHead : MonoBehaviour
 {
     private Rigidbody2D _rigidbody2D;
+
+    public event UnityAction BlockCollided; 
 
     private void Start() => _rigidbody2D = GetComponent<Rigidbody2D>();
 
@@ -12,6 +15,7 @@ public class SnakeHead : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent(out Block block))
         {
+            BlockCollided?.Invoke();
             block.Fill();
         }
     }
