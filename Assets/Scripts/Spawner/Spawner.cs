@@ -1,28 +1,38 @@
-using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Spawner : MonoBehaviour
 {
+    [Header("General")]
     [SerializeField] private Transform _spawnContainer;
     [SerializeField] private int _repeatCount;
     [SerializeField] private int _distanceBetweenFullLine;
     [SerializeField] private int _distanceBetweenRandomLine;
 
+    [Header("Block")]
     [SerializeField] private Block _blockTemplate;
     [SerializeField] private int _blockSpawnChance;
 
-    private SpawnPoint[] _blockSpawnPoints;
+    [Header("Wall")]
+    [SerializeField] private Wall _wallTemplate;
+    [SerializeField] private int _wallSpawnChance;
+    
+    private BlockSpawnPoint[] _blockSpawnPoints;
+    private WallSpawnPoint[] _wallSpawnPoints;
 
     private void Start()
     {
-        _blockSpawnPoints = GetComponentsInChildren<SpawnPoint>();
+        _blockSpawnPoints = GetComponentsInChildren<BlockSpawnPoint>();
+        _wallSpawnPoints = GetComponentsInChildren<WallSpawnPoint>();
 
         for (int i = 0; i < _repeatCount; i++)
         {
             MoveSpawner(_distanceBetweenFullLine);
+            GenerateRandomLine(_wallSpawnPoints, _wallTemplate.gameObject, _wallSpawnChance);
             GenerateFullLine(_blockSpawnPoints, _blockTemplate.gameObject);
+            
             MoveSpawner(_distanceBetweenRandomLine);
+            GenerateRandomLine(_wallSpawnPoints, _wallTemplate.gameObject, _wallSpawnChance);
             GenerateRandomLine(_blockSpawnPoints, _blockTemplate.gameObject, _blockSpawnChance);
         }
     }
