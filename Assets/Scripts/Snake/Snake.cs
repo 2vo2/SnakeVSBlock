@@ -18,7 +18,7 @@ public class Snake : MonoBehaviour
 
     public event UnityAction<int> SizeUpdated; 
 
-    private void Awake()
+    private void Start()
     {
         _snakeInput = GetComponent<SnakeInput>();
         _tailGenerator = GetComponent<TailGenerator>();
