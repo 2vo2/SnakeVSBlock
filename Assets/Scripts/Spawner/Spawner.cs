@@ -16,23 +16,31 @@ public class Spawner : MonoBehaviour
     [Header("Wall")]
     [SerializeField] private Wall _wallTemplate;
     [SerializeField] private int _wallSpawnChance;
+
+    [Header("Bonus")] 
+    [SerializeField] private Bonus _bonusTamplate;
+    [SerializeField] private int _bonusSpawnChance;
     
     private BlockSpawnPoint[] _blockSpawnPoints;
     private WallSpawnPoint[] _wallSpawnPoints;
+    private BonusSpawnPoint[] _bonusSpawnPoints;
 
     private void Start()
     {
         _blockSpawnPoints = GetComponentsInChildren<BlockSpawnPoint>();
         _wallSpawnPoints = GetComponentsInChildren<WallSpawnPoint>();
+        _bonusSpawnPoints = GetComponentsInChildren<BonusSpawnPoint>();
 
         for (int i = 0; i < _repeatCount; i++)
         {
             MoveSpawner(_distanceBetweenFullLine);
             GenerateRandomLine(_wallSpawnPoints, _wallTemplate.gameObject, _wallSpawnChance);
+            GenerateRandomLine(_bonusSpawnPoints, _bonusTamplate.gameObject, _bonusSpawnChance);
             GenerateFullLine(_blockSpawnPoints, _blockTemplate.gameObject);
             
             MoveSpawner(_distanceBetweenRandomLine);
             GenerateRandomLine(_wallSpawnPoints, _wallTemplate.gameObject, _wallSpawnChance);
+            GenerateRandomLine(_bonusSpawnPoints, _bonusTamplate.gameObject, _bonusSpawnChance);
             GenerateRandomLine(_blockSpawnPoints, _blockTemplate.gameObject, _blockSpawnChance);
         }
     }
